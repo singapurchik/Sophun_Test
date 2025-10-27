@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Leaderboard.Popup;
+using Leaderboard.Item;
 using System.Threading;
 using UnityEngine;
 using System;
@@ -10,7 +10,11 @@ namespace Leaderboard
 	public sealed class LeaderboardJsonProvider
 	{
 		private const string ResourcePath = "Leaderboard";
-		[Serializable] private sealed class Wrapper { public List<LeaderboardItemData> leaderboard; }
+
+		[Serializable] private sealed class Wrapper
+		{
+			public List<LeaderboardItemData> leaderboard;
+		}
 
 		public async Task<IReadOnlyList<LeaderboardItemData>> LoadAsync(CancellationToken ct)
 		{

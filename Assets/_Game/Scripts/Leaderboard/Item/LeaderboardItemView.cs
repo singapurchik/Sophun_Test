@@ -3,10 +3,10 @@ using UnityEngine;
 using System;
 using TMPro;
 
-namespace Leaderboard.Popup
+namespace Leaderboard.Item
 {
 	[Serializable]
-	public class LeaderboardPopupItemView
+	public class LeaderboardItemView
 	{
 		[SerializeField] private Image _avatar;
 		[SerializeField] private TextMeshProUGUI _nameText;

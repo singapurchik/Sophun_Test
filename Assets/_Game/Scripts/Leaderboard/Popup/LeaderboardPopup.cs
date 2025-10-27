@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
+using Leaderboard.Item;
 using UnityEngine;
 using Zenject;
 using Popup;
@@ -13,10 +13,10 @@ namespace Leaderboard.Popup
         [SerializeField] private LeaderboardPopupView _view;
         [SerializeField] private Transform _content;
 
-        [Inject] private LeaderboardPopupItemsPool _pool;
         [Inject] private LeaderboardJsonProvider _provider;
+        [Inject] private LeaderboardItemsPool _pool;
 
-        private readonly List<LeaderboardPopupItem> _spawned = new();
+        private readonly List<LeaderboardItem> _spawned = new();
         private LeaderboardPopupInfo _currentInfo;
         private CancellationTokenSource _cts;
 
@@ -36,6 +36,7 @@ namespace Leaderboard.Popup
         private async Task PopulateAsync(CancellationToken ct)
         {
             var list = await _provider.LoadAsync(ct);
+            
             for (int i = 0; i < list.Count; i++)
             {
                 if (ct.IsCancellationRequested) break;

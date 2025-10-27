@@ -1,12 +1,12 @@
 using System;
 
-namespace Leaderboard.Popup
+namespace Leaderboard.Item
 {
 	[Serializable]
-	public class LeaderboardItemData
+	public sealed class LeaderboardItemData
 	{
 		public string name;
-		public string score;
+		public int score;
 		public string avatar;
 		public string type;
 	}
