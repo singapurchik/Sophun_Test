@@ -5,7 +5,7 @@
 
 using System.Threading.Tasks;
 
-namespace SimplePopupManager
+namespace Popup
 {
     /// <summary>
     ///     An interface for initializing popups.
