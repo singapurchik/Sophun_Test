@@ -8,5 +8,9 @@ namespace Leaderboard
 		public Transform CanvasTransform { get; }
 		
 		public event Action OnOpenPopupButtonClicked;
+
+		public void HideOpenButton();
+
+		public void ShowOpenButton();
 	}
 }

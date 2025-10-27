@@ -1,3 +1,4 @@
+using Leaderboard.Avatar;
 using Leaderboard.Popup;
 using Leaderboard.Item;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Leaderboard
 	{
 		[SerializeField] private LeaderboardView _view;
 		[SerializeField] private LeaderboardItemsPool _pool;
+		[SerializeField] private PlayerTypeStyleSet _styles;
 		[SerializeField] private string _popupAddress = "LeaderboardPopup";
 		
 		private readonly Leaderboard _leaderboard = new ();
@@ -16,7 +18,9 @@ namespace Leaderboard
 		public override void InstallBindings()
 		{
 			Container.Bind<ILeaderboardView>().FromInstance(_view).WhenInjectedIntoInstance(_leaderboard);
+			Container.BindInstance(_styles).WhenInjectedInto<LeaderboardItem>();
 			Container.BindInstance(_pool).WhenInjectedInto<LeaderboardPopup>();
+			Container.Bind<IAvatarLoader>().To<AvatarLoader>().AsSingle();
 			Container.Bind<LeaderboardJsonProvider>().AsSingle();
 			Container.QueueForInject(_leaderboard);
 		}

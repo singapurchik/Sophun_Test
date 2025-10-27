@@ -14,14 +14,14 @@ namespace Leaderboard
 		public event Action OnOpenPopupButtonClicked;
 
 		private void OnEnable()
-		{
-			_openPopupButton.onClick.AddListener(InvokeOnOpenPopupButtonClicked);
-		}
+			=> _openPopupButton.onClick.AddListener(InvokeOnOpenPopupButtonClicked);
 
 		private void OnDisable()
-		{
-			_openPopupButton.onClick.RemoveListener(InvokeOnOpenPopupButtonClicked);
-		}
+			=> _openPopupButton.onClick.RemoveListener(InvokeOnOpenPopupButtonClicked);
+
+		public void HideOpenButton() => _openPopupButton.gameObject.SetActive(false);
+		
+		public void ShowOpenButton() => _openPopupButton.gameObject.SetActive(true);
 
 		private void InvokeOnOpenPopupButtonClicked() => OnOpenPopupButtonClicked?.Invoke();
 	}

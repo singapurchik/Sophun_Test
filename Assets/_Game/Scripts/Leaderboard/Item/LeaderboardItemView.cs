@@ -20,5 +20,23 @@ namespace Leaderboard.Item
 			_scoreText.text = score;
 			_typeText.text = type ?? "";
 		}
+		
+		public void ShowLoading()
+		{
+			_loadingText.enabled = true;
+			_avatar.sprite = null;
+		}
+
+		public void SetAvatar(Sprite sprite)
+		{
+			_loadingText.enabled = false;
+			_avatar.sprite = sprite;
+		}
+		
+		public void ApplyTypeStyle(PlayerTypeStyle style)
+		{
+			_typeText.fontSize = style.fontSize;
+			_typeText.color = style.color;
+		}
 	}
 }
