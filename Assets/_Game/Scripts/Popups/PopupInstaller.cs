@@ -6,7 +6,7 @@ namespace Popup
 	{
 		public override void InstallBindings()
 		{
-			Container.Bind<IPopupManagerService>().To<PopupManagerServiceService>().AsSingle();
+			Container.Bind<IPopupManagerService>().To<PopupManagerService>().AsSingle();
 		}
 	}
 }

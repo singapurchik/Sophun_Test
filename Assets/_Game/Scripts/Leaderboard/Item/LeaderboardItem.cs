@@ -14,37 +14,50 @@ namespace Leaderboard.Item
 		[Inject] private PlayerTypeStyleSet _styles;
 		[Inject] private IAvatarLoader _avatars;
 
-		private CancellationTokenSource _cts;
+		private CancellationTokenSource _cancellationTokenSource;
 		
 		public event Action<LeaderboardItem> OnRemoved;
 
 		public void Initialize(LeaderboardItemData data)
 		{
-			_cts?.Cancel();
-			_cts = new CancellationTokenSource();
+			_cancellationTokenSource?.Cancel();
+			_cancellationTokenSource = new CancellationTokenSource();
 			
-			_view.Initialize(data.name, data.score.ToString(), data.type);
-			_view.ApplyTypeStyle(_styles.Get(data.type));
+			var styleType = _styles.Get(data.type);
+			transform.localScale = new Vector3(1, styleType.ScaleFactor, 1);
+			_view.Initialize(data.name, data.score.ToString());
+			_view.SetBackgroundColor(styleType.Color);
 			_view.ShowLoading();
 			
-			_ = LoadAvatarAsync(data.avatar, _cts.Token);
+			_ = LoadAvatarAsync(data.avatar, _cancellationTokenSource.Token);
 		}
 		
 		private async Task LoadAvatarAsync(string url, CancellationToken ct)
 		{
+			Sprite sprite;
+
 			try
 			{
-				var sprite = await _avatars.LoadSpriteAsync(url, 100, ct);
-				if (!this || ct.IsCancellationRequested) return;
-				_view.SetAvatar(sprite);
+				sprite = await _avatars.LoadSpriteAsync(url, 100, ct);
 			}
-			catch
+			catch (TaskCanceledException)
 			{
-				if (!this) return;
-				_view.SetAvatar(null);
+				return;
 			}
+			catch (Exception)
+			{
+				sprite = null;
+			}
+
+			if (this&& !ct.IsCancellationRequested)
+				_view.SetAvatar(sprite);
 		}
 
-		public void Remove() => OnRemoved?.Invoke(this);
+
+		public void Remove()
+		{
+			_cancellationTokenSource?.Cancel();
+			OnRemoved?.Invoke(this);
+		}
 	}
 }

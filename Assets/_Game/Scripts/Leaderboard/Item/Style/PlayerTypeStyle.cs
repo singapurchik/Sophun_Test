@@ -4,10 +4,14 @@ using System;
 namespace Leaderboard
 {
 	[Serializable]
-	public struct PlayerTypeStyle
+	public struct PlayerTypeStyle : ISerializationCallbackReceiver
 	{
-		public string type;
-		[Range(60, 90)] public int fontSize;
-		public Color color;
+		public string Type;
+		[Range(1f, 1.15f)] public float ScaleFactor;
+		public Color Color;
+
+		public void OnBeforeSerialize() => ScaleFactor = Mathf.Clamp(ScaleFactor, 1, 1.15f);
+
+		public void OnAfterDeserialize() => ScaleFactor = Mathf.Clamp(ScaleFactor, 1, 1.15f);
 	}
 }

@@ -18,8 +18,10 @@ namespace Leaderboard.Popup
 
         private readonly List<LeaderboardItem> _spawned = new();
         private LeaderboardPopupInfo _currentInfo;
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource _cancellationTokenSource;
 
+        private void OnDestroy() => Cleanup();
+        
         public Task Init(object param)
         {
             if (param is LeaderboardPopupInfo popupInfo)
@@ -28,18 +30,20 @@ namespace Leaderboard.Popup
             _view.OnCloseButtonClicked += Close;
             _view.AddListeners();
 
-            _cts = new CancellationTokenSource();
-            _ = PopulateAsync(_cts.Token);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _ = PopulateAsync(_cancellationTokenSource.Token);
             return Task.CompletedTask;
         }
 
-        private async Task PopulateAsync(CancellationToken ct)
+        private async Task PopulateAsync(CancellationToken cancellationToken)
         {
-            var list = await _provider.LoadAsync(ct);
+            var list = await _provider.LoadAsync(cancellationToken);
             
             for (int i = 0; i < list.Count; i++)
             {
-                if (ct.IsCancellationRequested) break;
+                if (cancellationToken.IsCancellationRequested)
+	                break;
+                
                 var item = _pool.Get();
                 item.transform.SetParent(_content, false);
                 item.Initialize(list[i]);
@@ -47,28 +51,22 @@ namespace Leaderboard.Popup
             }
         }
 
+        private void Cleanup()
+        {
+	        _cancellationTokenSource?.Cancel();
+            _view.OnCloseButtonClicked -= Close;
+            _view.RemoveListeners();
+            
+            for (int i = 0; i < _spawned.Count; i++)
+	            _spawned[i].Remove();
+            
+            _spawned.Clear();
+        }
+        
         private void Close()
         {
-            _view.OnCloseButtonClicked -= Close;
-            _view.RemoveListeners();
-
-            for (int i = 0; i < _spawned.Count; i++)
-                _spawned[i].Remove();
-            _spawned.Clear();
-
-            _cts?.Cancel();
+	        Cleanup();
             _currentInfo.OnClose();
-        }
-
-        private void OnDestroy()
-        {
-            _cts?.Cancel();
-            _view.OnCloseButtonClicked -= Close;
-            _view.RemoveListeners();
-
-            for (int i = 0; i < _spawned.Count; i++)
-                _spawned[i].Remove();
-            _spawned.Clear();
         }
     }
 }

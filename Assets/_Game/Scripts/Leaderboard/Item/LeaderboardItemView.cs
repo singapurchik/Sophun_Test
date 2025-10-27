@@ -9,16 +9,15 @@ namespace Leaderboard.Item
 	public class LeaderboardItemView
 	{
 		[SerializeField] private Image _avatar;
+		[SerializeField] private Image _background;
 		[SerializeField] private TextMeshProUGUI _nameText;
 		[SerializeField] private TextMeshProUGUI _scoreText;
-		[SerializeField] private TextMeshProUGUI _typeText;
 		[SerializeField] private TextMeshProUGUI _loadingText;
 
-		public void Initialize(string name, string score, string type)
+		public void Initialize(string name, string score)
 		{
 			_nameText.text = name ?? "";
 			_scoreText.text = score;
-			_typeText.text = type ?? "";
 		}
 		
 		public void ShowLoading()
@@ -33,10 +32,6 @@ namespace Leaderboard.Item
 			_avatar.sprite = sprite;
 		}
 		
-		public void ApplyTypeStyle(PlayerTypeStyle style)
-		{
-			_typeText.fontSize = style.fontSize;
-			_typeText.color = style.color;
-		}
+		public void SetBackgroundColor(Color color) => _background.color = color;
 	}
 }

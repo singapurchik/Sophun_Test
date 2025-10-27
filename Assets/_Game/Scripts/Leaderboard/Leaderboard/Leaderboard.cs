@@ -20,8 +20,7 @@ namespace Leaderboard
 		private void OnOpenPopupButtonClicked()
 		{
 			_view.HideOpenButton();
-			var info = new LeaderboardPopupInfo(OnPopupClosed);
-			_popupManager.OpenPopup(_popupAddress, info, _view.CanvasTransform);
+			_popupManager.OpenPopup(_popupAddress, new LeaderboardPopupInfo(OnPopupClosed), _view.CanvasTransform);
 		}
 
 		private void OnPopupClosed()

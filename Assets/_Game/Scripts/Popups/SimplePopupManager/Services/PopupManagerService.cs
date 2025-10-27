@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Popup
 {
-    public class PopupManagerServiceService : IPopupManagerService
+    public class PopupManagerService : IPopupManagerService
     {
 	    [Inject] private DiContainer _container;
 	    

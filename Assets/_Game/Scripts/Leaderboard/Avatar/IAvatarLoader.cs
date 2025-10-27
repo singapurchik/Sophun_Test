@@ -6,6 +6,6 @@ namespace Leaderboard.Avatar
 {
 	public interface IAvatarLoader
 	{
-		public Task<Sprite> LoadSpriteAsync(string url, int pixelsPerUnit, CancellationToken ct);
+		public Task<Sprite> LoadSpriteAsync(string url, int pixelsPerUnit, CancellationToken cancellationToken);
 	}
 }

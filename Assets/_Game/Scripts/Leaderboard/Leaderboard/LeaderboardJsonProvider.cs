@@ -11,7 +11,8 @@ namespace Leaderboard
 	{
 		private const string ResourcePath = "Leaderboard";
 
-		[Serializable] private sealed class Wrapper
+		[Serializable]
+		private sealed class Wrapper
 		{
 			public List<LeaderboardItemData> leaderboard;
 		}
@@ -19,21 +20,27 @@ namespace Leaderboard
 		public async Task<IReadOnlyList<LeaderboardItemData>> LoadAsync(CancellationToken ct)
 		{
 			await Task.Yield();
-			var ta = Resources.Load<TextAsset>(ResourcePath);
-			if (!ta) return Array.Empty<LeaderboardItemData>();
-			var src = ta.text?.Trim() ?? "[]";
-			List<LeaderboardItemData> list = null;
-			if (src.Length > 0 && src[0] == '[')
-				src = $"{{\"leaderboard\":{src}}}";
+			var textAsset = Resources.Load<TextAsset>(ResourcePath);
+			
+			if (!textAsset)
+				return Array.Empty<LeaderboardItemData>();
+			
+			var trim = textAsset.text?.Trim() ?? "[]";
+			
+			List<LeaderboardItemData> list;
+			
+			if (trim.Length > 0 && trim[0] == '[')
+				trim = $"{{\"leaderboard\":{trim}}}";
+			
 			try
 			{
-				var w = JsonUtility.FromJson<Wrapper>(src);
-				list = w?.leaderboard ?? new List<LeaderboardItemData>();
+				list = JsonUtility.FromJson<Wrapper>(trim)?.leaderboard ?? new List<LeaderboardItemData>();
 			}
 			catch
 			{
 				list = new List<LeaderboardItemData>();
 			}
+			
 			list.Sort((a, b) => b.score.CompareTo(a.score));
 			return list;
 		}

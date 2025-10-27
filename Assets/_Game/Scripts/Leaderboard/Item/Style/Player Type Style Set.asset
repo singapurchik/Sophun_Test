@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: Player Type Style Set
   m_EditorClassIdentifier: 
   _styles:
-  - type: default
-    fontSize: 60
-    color: {r: 0, g: 0, b: 0, a: 1}
-  - type: bronze
-    fontSize: 66
-    color: {r: 0.8039216, g: 0.49803922, b: 0.19607843, a: 1}
-  - type: silver
-    fontSize: 74
-    color: {r: 0.6901961, g: 0.74509805, b: 0.77254903, a: 1}
-  - type: gold
-    fontSize: 82
-    color: {r: 1, g: 0.75686276, b: 0.02745098, a: 1}
-  - type: diamond
-    fontSize: 90
-    color: {r: 0.30980393, g: 0.7647059, b: 0.96862745, a: 1}
+  - Type: default
+    ScaleFactor: 1
+    Color: {r: 0.9308176, g: 0.9308176, b: 0.9308176, a: 1}
+  - Type: bronze
+    ScaleFactor: 1.01
+    Color: {r: 0.8039216, g: 0.49803922, b: 0.19607843, a: 1}
+  - Type: silver
+    ScaleFactor: 1.02
+    Color: {r: 0.6901961, g: 0.74509805, b: 0.77254903, a: 1}
+  - Type: gold
+    ScaleFactor: 1.05
+    Color: {r: 1, g: 0.75686276, b: 0.02745098, a: 1}
+  - Type: diamond
+    ScaleFactor: 1.1
+    Color: {r: 0.30980393, g: 0.7647059, b: 0.96862745, a: 1}
