@@ -1,51 +1,57 @@
 Overview
 
-Popup-based Leaderboard for Unity:
-
-Reads Resources/Leaderboard.json.
-
-Opens/closes via global IPopupManagerService (Zenject).
-
-Shows name/score/type; avatars load async with in-memory cache.
-
-Popups are Addressables and are injected before init.
+This project implements a popup-based leaderboard in Unity.
+Entries are read from Assets/Resources/Leaderboard.json.
+The popup opens and closes through a global IPopupManagerService bound with Zenject.
+Player avatars load asynchronously and are cached in memory.
+The popup prefab is an Addressable and is injected before initialization.
 
 How it works
 
-Core: ObjectPool<T> — pooled items, Zenject instantiation, returns by OnRemoved.
+Core
+ObjectPool<T> provides pooled items. New items are created with Zenject. Items return to the pool by raising OnRemoved.
 
-Popup: IPopupManagerService, PopupManagerService (instantiate, InjectGameObject, call IPopupInitialization.Init, track/close), PopupInstaller.
+Popup
+IPopupManagerService and PopupManagerService. The manager instantiates the popup, injects it with InjectGameObject, calls every IPopupInitialization.Init, tracks instances, and closes them when requested. PopupInstaller binds the service as a singleton.
 
-Leaderboard:
+Leaderboard
+LeaderboardJsonProvider reads JSON, supports a plain array or an object with the leaderboard field, and sorts by score in descending order.
+LeaderboardView shows the Open button. Leaderboard coordinates opening and closing. LeaderboardPopup creates and fills items. LeaderboardItemsPool provides item instances. LeaderboardItem and LeaderboardItemView render data.
+IAvatarLoader and AvatarLoader download textures with UnityWebRequestTexture, cache sprites by URL, and support cancellation.
+PlayerTypeStyleSet maps the string type to a color. The optional Y scale is present in code and can be set to 1.
 
-Data: LeaderboardJsonProvider (supports [] or {"leaderboard":[...]}, sorts by score desc).
+Flow
 
-UI: LeaderboardView (open), LeaderboardPopup (populate & close), LeaderboardItem/LeaderboardItemView, LeaderboardItemsPool.
+The user clicks the Open button. Leaderboard hides the button and calls OpenPopup(address, info, parent).
 
-Avatars: IAvatarLoader/AvatarLoader (UnityWebRequestTexture + cache, cancellation).
+The manager instantiates the popup as an Addressable, injects it, calls Init on components that implement IPopupInitialization, then shows the popup.
 
-Styles: PlayerTypeStyleSet (type → color; optional Y-scale present).
+The popup loads JSON, gets items from the pool, initializes each item, shows a loading label for the avatar, starts an avatar request with a cancellation token, and updates the image when ready.
 
-Flow: Button → OpenPopup(address, info, parent) → Addressables instantiate → inject → Init(param) → load JSON → spawn pooled items → each item applies style, shows “Loading”, downloads avatar (CTS) → popup Close → clean up → ClosePopup(address).
+The Close button triggers cleanup, returns items to the pool, and calls OnClose. Leaderboard then calls ClosePopup(address) and shows the Open button again.
 
 Setup
 
-Addressables: mark popup as LeaderboardPopup.
+Mark the popup prefab with the Addressables address LeaderboardPopup.
 
-Resources: Assets/Resources/Leaderboard.json (array or wrapped).
+Create Assets/Resources/Leaderboard.json. You can use an array or an object with the leaderboard field.
 
-Installers:
+Add installers to the scene.
 
-PopupInstaller: bind IPopupManagerService as single.
+PopupInstaller binds IPopupManagerService as a singleton.
 
-LeaderboardInstaller: bind provider, avatar loader, styles, view, pool; call Initialize.
+LeaderboardInstaller binds the view, the pool, the style set, the JSON provider, and the avatar loader. It also calls Initialize.
 
-TMP installed.
+Install TextMesh Pro.
 
 Design notes
 
-DI access to popup manager (interface, not impl).
+Access to the popup manager is through a DI interface.
 
-Injection for Addressables via InjectGameObject.
+Addressables instances are injected with InjectGameObject.
 
-Async + cancellation; simple memory cache; minimal abstractions.
+JSON reading and avatar loading are asynchronous and cancellable.
+
+Memory cache only for avatars.
+
+Minimal number of components and straightforward responsibilities.
