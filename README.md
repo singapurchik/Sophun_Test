@@ -9,12 +9,15 @@ The popup prefab is an Addressable and is injected before initialization.
 How it works
 
 Core
+
 ObjectPool<T> provides pooled items. New items are created with Zenject. Items return to the pool by raising OnRemoved.
 
 Popup
+
 IPopupManagerService and PopupManagerService. The manager instantiates the popup, injects it with InjectGameObject, calls every IPopupInitialization.Init, tracks instances, and closes them when requested. PopupInstaller binds the service as a singleton.
 
 Leaderboard
+
 LeaderboardJsonProvider reads JSON, supports a plain array or an object with the leaderboard field, and sorts by score in descending order.
 LeaderboardView shows the Open button. Leaderboard coordinates opening and closing. LeaderboardPopup creates and fills items. LeaderboardItemsPool provides item instances. LeaderboardItem and LeaderboardItemView render data.
 IAvatarLoader and AvatarLoader download textures with UnityWebRequestTexture, cache sprites by URL, and support cancellation.
